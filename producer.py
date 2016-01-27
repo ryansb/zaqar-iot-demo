@@ -12,7 +12,7 @@ if __name__ == '__main__':
 
     complete = client.queue('completed')
     while True:
-        claimed = complete.claim(ttl=180)
+        claimed = complete.claim(ttl=180, grace=60)
         for msg in claimed:
             print "%s %s" % (datetime.datetime.now(), msg.body)
             msg.delete()
