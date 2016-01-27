@@ -4,16 +4,12 @@ if __name__ == '__main__':
     scrape = client.queue('scrape')
     ingest = client.queue('ingest')
     complete = client.queue('completed')
+
     were_messages = True
+
     while were_messages:
         were_messages = False
-        for msg in scrape.claim(ttl=60, grace=60):
-            msg.delete()
-            were_messages = True
-        for msg in ingest.claim(ttl=60, grace=60):
-            msg.delete()
-            were_messages = True
-        for msg in complete.claim(ttl=60, grace=60):
-            msg.delete()
-            were_messages = True
-        print were_messages
+        for q in (scrape, ingest, complete):
+            for msg in q.claim(ttl=60, grace=60, limit=20):
+                msg.delete()
+                were_messages = True
