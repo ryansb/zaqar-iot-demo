@@ -29,10 +29,18 @@ def scrape_generator(url):
         else:
             yield parent.scheme + '://' + parent.netloc + parent.path + '/' + link
 
-if __name__ == '__main__':
-    #for u in scrape('http://rsb.io/'):
-    #    print u
 
+seen = {}
+def scrapable(uri):
+    if not uri.startswith(sys.argv[1]):
+        return False
+    if seen.get(uri):
+        return False
+    seen[uri] = True
+    return True
+
+
+if __name__ == '__main__':
     scrape = client.queue('scrape')
     ingest = client.queue('ingest')
     complete = client.queue('completed')
@@ -43,7 +51,7 @@ if __name__ == '__main__':
             messages = [
                 {'body': u, 'ttl': 180}
                 for u in scrape_generator(msg.body)
-                if u.startswith(sys.argv[1])
+                if scrapable(u)
             ]
             if len(messages):
                 ingest.post(messages)
