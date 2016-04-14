@@ -1,7 +1,8 @@
-1. Push starting URL to ingest
-1. Wait for workers to finish (reader topic has nothing in it)
+# Purpose
 
-```
-ingest topic -> deduplication worker -> scrape topic -> pull worker -> scraped URLs to completed topic
-                                                          \-> found URLs to ingest topic
-```
+![Example workflow diagram](example.png)
+
+## License
+
+Code, docs, and images are all released under the MIT license, see LICENSE.txt
+for details.
